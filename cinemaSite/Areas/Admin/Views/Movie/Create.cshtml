@@ -1,0 +1,102 @@
+﻿@model CinemaTask.Models.Movie
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Create New Movie</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+
+                <!-- Movie Name -->
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span class="text-danger" asp-validation-for="Name"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" style="height:100px"></textarea>
+                    <span class="text-danger" asp-validation-for="Description"></span>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" type="number" step="0.01" class="form-control" />
+                    <span class="text-danger" asp-validation-for="Price"></span>
+                </div>
+
+                <!-- Image URL -->
+                <div class="mb-3">
+                    <label asp-for="ImgUrl" class="form-label"></label>
+                    <input asp-for="ImgUrl" class="form-control" />
+                    <span class="text-danger" asp-validation-for="ImgUrl"></span>
+                </div>
+
+                <!-- Trailer URL -->
+                <div class="mb-3">
+                    <label asp-for="TrailerUrl" class="form-label"></label>
+                    <input asp-for="TrailerUrl" class="form-control" />
+                    <span class="text-danger" asp-validation-for="TrailerUrl"></span>
+                </div>
+
+                <!-- Start & End Dates -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="StartDate" class="form-label"></label>
+                        <input asp-for="StartDate" type="date" class="form-control" />
+                        <span class="text-danger" asp-validation-for="StartDate"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="EndDate" class="form-label"></label>
+                        <input asp-for="EndDate" type="date" class="form-control" />
+                        <span class="text-danger" asp-validation-for="EndDate"></span>
+                    </div>
+                </div>
+
+                <!-- Movie Status -->
+                <div class="mb-3">
+                    <label asp-for="MovieStatus" class="form-label"></label>
+                    <select asp-for="MovieStatus" class="form-select">
+                        <option value="">-- Select Status --</option>
+                        <option value="0">Coming Soon</option>
+                        <option value="1">Now Showing</option>
+                        <option value="2">Ended</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="MovieStatus"></span>
+                </div>
+
+                <!-- Cinema Dropdown -->
+                <div class="mb-3">
+                    <label asp-for="CinemaId" class="form-label"></label>
+                    <select asp-for="CinemaId" class="form-select" asp-items="ViewBag.Cinemas">
+                        <option value="">-- Select Cinema --</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="CinemaId"></span>
+                </div>
+
+                <!-- Category Dropdown -->
+                <div class="mb-3">
+                    <label asp-for="CategoryId" class="form-label"></label>
+                    <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                        <option value="">-- Select Category --</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="CategoryId"></span>
+                </div>
+
+                <!-- Buttons -->
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,199 @@
+﻿@model CinemaTask.Models.Movie
+@{
+    ViewData["Title"] = Model.Name + " - CineMax";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <style>
+        .movie-detail-hero {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('@(string.IsNullOrEmpty(Model.ImgUrl) ? "https://via.placeholder.com/1920x400/333/fff?text=" + Uri.EscapeDataString(Model.Name) : Model.ImgUrl)') center/cover;
+            padding: 80px 0;
+            margin-bottom: 3rem;
+            border-radius: 15px;
+        }
+
+        .movie-poster-large {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .actor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .actor-card {
+            background: var(--light-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+            .actor-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 20px rgba(229, 9, 20, 0.2);
+            }
+
+        .actor-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid var(--primary-color);
+        }
+
+        .movie-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .movie-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+            .gallery-image:hover {
+                transform: scale(1.05);
+            }
+    </style>
+}
+
+<div class="movie-detail-hero">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">@Model.Name</h1>
+        <p class="lead">@Model.Description</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <img src="@(string.IsNullOrEmpty(Model.ImgUrl) ? "https://via.placeholder.com/400x600/333/fff?text=" + Uri.EscapeDataString(Model.Name) : Model.ImgUrl)"
+                 class="movie-poster-large" alt="@Model.Name">
+        </div>
+
+        <div class="col-lg-8">
+            <div class="movie-info-grid">
+                <div class="info-card">
+                    <h5><i class="fas fa-film me-2"></i>Category</h5>
+                    <p class="mb-0">@Model.Category?.Name</p>
+                </div>
+
+                <div class="info-card">
+                    <h5><i class="fas fa-building me-2"></i>Cinema</h5>
+                    <p class="mb-0">@Model.Cinema?.Name</p>
+                </div>
+
+                <div class="info-card">
+                    <h5><i class="fas fa-star me-2"></i>Price</h5>
+                    <p class="mb-0">@Model.Price.ToString("C")</p>
+                </div>
+
+                <div class="info-card">
+                    <h5><i class="fas fa-calendar me-2"></i>Release Date</h5>
+                    <p class="mb-0">@Model.StartDate.ToString("MMMM dd, yyyy")</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h5><i class="fas fa-info-circle me-2"></i>Description</h5>
+                <p class="mb-0">@Model.Description</p>
+            </div>
+
+            <!-- Movie Gallery -->
+            @if (Model.MultiImageUrl != null && Model.MultiImageUrl.Any())
+            {
+                <div class="info-card">
+                    <h5><i class="fas fa-images me-2"></i>Gallery</h5>
+                    <div class="movie-gallery">
+                        @foreach (var imageUrl in Model.MultiImageUrl)
+                        {
+                            <img src="~/images/movies/@(Model.Id).png"
+                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/400x600/333/fff?text=@Uri.EscapeDataString(Model.Name)'"
+                                 class="movie-poster-large" alt="@Model.Name">
+                            @* <img src="@imageUrl" class="gallery-image" alt="Movie scene"> *@
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Cast Section -->
+    <div class="mt-5">
+        <h3 class="mb-4"><i class="fas fa-users me-2"></i>Cast</h3>
+        @if (ViewBag.Actors != null && ((List<CinemaTask.Models.Actor>)ViewBag.Actors).Any())
+        {
+            <div class="actor-grid">
+                @foreach (var actor in (List<CinemaTask.Models.Actor>)ViewBag.Actors)
+                {
+                    <div class="actor-card">
+                        <img src="~/images/cast/@(actor.Id).png"
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100/333/fff?text=@Uri.EscapeDataString(actor.FirstName + " " + actor.LastName)'"
+                             class="actor-photo" alt="@actor.FirstName @actor.LastName">
+                        <!-- rest of actor card -->
+                    </div>
+                }
+                @* @foreach (var actor in (List<CinemaTask.Models.Actor>)ViewBag.Actors)
+                {
+                    <div class="actor-card">
+                        <img src="@(string.IsNullOrEmpty(actor.ProfilePicture) ? "https://via.placeholder.com/100x100/333/fff?text=" + Uri.EscapeDataString(actor.FullName) : actor.ProfilePicture)"
+                             class="actor-photo" alt="@actor.FullName">
+                        <h6>@actor.FullName</h6>
+                        <p class="text-muted small mb-2">@actor.Bio</p>
+                        <a asp-action="ActorDetails" asp-route-id="@actor.Id" class="btn-details btn-sm">
+                            <i class="fas fa-user me-1"></i>View Profile
+                        </a>
+                    </div>
+                } *@
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-users fa-2x text-muted mb-3"></i>
+                <p class="text-muted">No cast information available</p>
+            </div>
+        }
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-action="Index" class="btn-details me-3">
+            <i class="fas fa-arrow-left me-2"></i>Back to Movies
+        </a>
+        @if (!string.IsNullOrEmpty(Model.TrailerUrl))
+        {
+            <a href="@Model.TrailerUrl" target="_blank" class="btn-details me-3">
+                <i class="fas fa-play me-2"></i>Watch Trailer
+            </a>
+        }
+        <button class="btn-details">
+            <i class="fas fa-ticket-alt me-2"></i>Book Tickets
+        </button>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+﻿@* _NotificationPartial.cshtml *@
+<div id="notification" class="alert alert-info d-none" role="alert">
+    This is a notification.
+</div>
+
+@section Scripts {
+    <script>
+        // Example: show notification dynamically
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.classList.remove('d-none');
+            setTimeout(() => notif.classList.add('d-none'), 3000);
+        }
+    </script>
+}

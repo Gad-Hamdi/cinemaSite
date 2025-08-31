@@ -1,0 +1,102 @@
+﻿@model List<CinemaTask.Models.Actor>
+
+@{
+    ViewData["Title"] = "Actors List";
+}
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".btn-delete").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const form = this.closest("form");
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}
+
+<div class="container">
+    <div class="row mb-3 align-items-center my-3">
+        <div class="col-md-6">
+            <h2 class="display-6">All Actors</h2>
+        </div>
+        <div class="col-md-6 text-md-end text-start mt-2 mt-md-0">
+            <a asp-action="Create" asp-controller="Actor" class="btn btn-success">Create New Actor</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Full Name</th>
+                        <th>Bio</th>
+                        <th>Profile Picture</th>
+                        <th>News</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var actor in Model)
+                    {
+                        <tr>
+                            <td>@actor.Id</td>
+                            <td>@actor.FirstName @actor.LastName</td>
+
+                            <td>
+                                @if (!string.IsNullOrEmpty(actor.Bio) && actor.Bio.Length > 50)
+                                {
+                                    @actor.Bio.Substring(0, 50)
+                                                            }
+                                else
+                                {
+                                    @actor.Bio
+                                }
+                            </td>
+
+                            <td>
+                                <img src="@(!string.IsNullOrEmpty(actor.ProfilePicture) ? actor.ProfilePicture : "/images/default-profile.png")"
+                                     alt="@actor.FirstName" width="60" height="60" class="rounded-circle" />
+                            </td>
+
+                            <td>@(string.IsNullOrEmpty(actor.News) ? "-" : actor.News)</td>
+
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@actor.Id" class="btn btn-warning btn-sm">Edit</a>
+
+                                <form asp-action="Delete" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@actor.Id" />
+                                    <button type="button" class="btn btn-danger btn-sm btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿@model CinemaTask.Models.Cinema
+
+<div class="container">
+    <h2 class="my-3">Edit Cinema</h2>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span class="text-danger" asp-validation-for="Name"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" style="height:100px"></textarea>
+            <span class="text-danger" asp-validation-for="Description"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label"></label>
+            <input asp-for="Address" class="form-control" />
+            <span class="text-danger" asp-validation-for="Address"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CinemaLogo" class="form-label"></label>
+            <input asp-for="CinemaLogo" class="form-control" />
+            <span class="text-danger" asp-validation-for="CinemaLogo"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

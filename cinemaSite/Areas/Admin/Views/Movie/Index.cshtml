@@ -1,0 +1,64 @@
+﻿@model List<CinemaTask.Models.Movie>
+
+<div class="container">
+    <div class="row mb-3 align-items-center my-3">
+        <div class="col-md-6">
+            <h2 class="display-6">All Movies</h2>
+        </div>
+        <div class="col-md-6 text-md-end text-start mt-2 mt-md-0">
+            <a asp-action="Create" class="btn btn-success">Create New Movie</a>
+        </div>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Cinema</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>@movie.Id</td>
+                    <td>@movie.Name</td>
+                    <td>@movie.Cinema?.Name</td>
+                    <td>@movie.Category?.Name</td>
+                    <td>@movie.Price.ToString("C")</td>
+                    <td>
+                        @switch (movie.MovieStatus)
+                        {
+                            case 0:
+                                @:<span class="badge bg-secondary">Coming Soon</span>
+                                break;
+                            case 1:
+                                @:<span class="badge bg-success">Now Showing</span>
+                                break;
+                            case 2:
+                                @:<span class="badge bg-danger">Ended</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-warning btn-sm">Edit</a>
+
+                        <form asp-action="DeleteConfirmed" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@movie.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this movie?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
