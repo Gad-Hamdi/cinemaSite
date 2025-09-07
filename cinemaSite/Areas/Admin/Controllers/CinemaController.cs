@@ -1,71 +1,78 @@
-﻿using CinemaTask.DataAccess;
-using CinemaTask.Models;
-using CinemaTask.Utility;
+﻿using cinemaSite.DataAccess;
+using cinemaSite.Models;
+using cinemaSite.Repositories.IRepositories;
+using cinemaSite.Utility;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-namespace CinemaTask.Areas.Admin.Controllers
+namespace cinemaSite.Areas.Admin.Controllers
 {
     [Area(SD.AdminArea)]
 
     public class CinemaController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _cinemaRepository;
 
-        public CinemaController(ApplicationDbContext context)
+        //public CinemaController(ApplicationDbContext context)
+        //{
+        //    _cinemaRepository = context;
+        //}
+
+        private readonly IRepository<Cinema> _cinemaRepository;
+        public CinemaController(IRepository<Cinema> cinemaRepository) => _cinemaRepository = cinemaRepository;
+        public async Task<IActionResult> Index()
         {
-            _context = context;
-        }
-        public IActionResult Index()
-        {
-            var cinemas = _context.Cinemas.ToList();
+            var cinemas =await _cinemaRepository.GetAsync();
             return View(cinemas);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new Cinema());
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Cinema cinema)
+        public async Task<IActionResult> Create(Cinema cinema)
         {
             if (!ModelState.IsValid)
                 return View(cinema);
 
-            _context.Cinemas.Add(cinema);
-            _context.SaveChanges();
+            await _cinemaRepository.CreateAsync(cinema);
+           await _cinemaRepository.CommitAsync();
+            TempData["save"] = "Cinema has been saved successfully";
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var cinema = _context.Cinemas.Find(id);
+            var cinema =await _cinemaRepository.GetOneAsync(c=>c.Id==id);
             if (cinema == null) return NotFound();
             return View(cinema);
         }
 
         [HttpPost]
-        public IActionResult Edit(Cinema cinema)
+        public async Task<IActionResult> Edit(Cinema cinema)
         {
             if (!ModelState.IsValid)
                 return View(cinema);
 
-            _context.Cinemas.Update(cinema);
-            _context.SaveChanges();
+            _cinemaRepository.Update(cinema);
+            await _cinemaRepository.CommitAsync();
+            TempData["edit"] = "Cinema has been updated successfully";
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cinema = _context.Cinemas.Find(id);
+            var cinema = await _cinemaRepository.GetOneAsync(c => c.Id == id);
             if (cinema == null) return NotFound();
 
-            _context.Cinemas.Remove(cinema);
-            _context.SaveChanges();
+            _cinemaRepository.Delete(cinema);
+            await _cinemaRepository.CommitAsync();
+            TempData["delete"] = "Cinema has been deleted successfully";
             return RedirectToAction(nameof(Index));
         }
 

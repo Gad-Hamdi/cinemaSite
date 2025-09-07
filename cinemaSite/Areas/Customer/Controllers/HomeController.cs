@@ -1,11 +1,11 @@
-using CinemaTask.DataAccess;
-using CinemaTask.Models;
-using CinemaTask.Utility;
+using cinemaSite.DataAccess;
+using cinemaSite.Models;
+using cinemaSite.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
-namespace CinemaTask.Areas.Customer.Controllers
+namespace cinemaSite.Areas.Customer.Controllers
 {
     [Area(SD.CustomerArea)]
     public class HomeController : Controller

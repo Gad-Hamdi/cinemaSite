@@ -1,4 +1,4 @@
-﻿namespace CinemaTask.Models
+﻿namespace cinemaSite.Models
 {
     public class ActorMovie
     {

@@ -1,4 +1,4 @@
-﻿@model CinemaTask.Models.Actor
+﻿@model cinemaSite.Models.Actor
 
 <div class="container">
     <h2 class="my-3">Edit Actor</h2>
@@ -10,31 +10,31 @@
         <div class="mb-3">
             <label asp-for="FirstName" class="form-label"></label>
             <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
+            <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="LastName" class="form-label"></label>
             <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
+            <span asp-validation-for="@Model.LastName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Bio" class="form-label"></label>
             <textarea asp-for="Bio" class="form-control" style="height:100px"></textarea>
-            <span asp-validation-for="Bio" class="text-danger"></span>
+            <span asp-validation-for="@Model.Bio" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="News" class="form-label"></label>
             <textarea asp-for="News" class="form-control" style="height:80px"></textarea>
-            <span asp-validation-for="News" class="text-danger"></span>
+            <span asp-validation-for="@Model.News" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="ProfilePicture" class="form-label"></label>
             <input asp-for="ProfilePicture" class="form-control" />
-            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+            <span asp-validation-for="@Model.ProfilePicture" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>

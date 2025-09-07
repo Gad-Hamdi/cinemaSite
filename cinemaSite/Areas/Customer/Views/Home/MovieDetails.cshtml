@@ -1,4 +1,4 @@
-﻿@model CinemaTask.Models.Movie
+﻿@model cinemaSite.Models.Movie
 @{
     ViewData["Title"] = Model.Name + " - CineMax";
     Layout = "_Layout";
@@ -133,7 +133,7 @@
                     <div class="movie-gallery">
                         @foreach (var imageUrl in Model.MultiImageUrl)
                         {
-                            <img src="~/images/movies/@(Model.Id).png"
+                            <img src="~/images/movies/@Model.ImgUrl"
                                  onerror="this.onerror=null;this.src='https://via.placeholder.com/400x600/333/fff?text=@Uri.EscapeDataString(Model.Name)'"
                                  class="movie-poster-large" alt="@Model.Name">
                             @* <img src="@imageUrl" class="gallery-image" alt="Movie scene"> *@
@@ -147,19 +147,19 @@
     <!-- Cast Section -->
     <div class="mt-5">
         <h3 class="mb-4"><i class="fas fa-users me-2"></i>Cast</h3>
-        @if (ViewBag.Actors != null && ((List<CinemaTask.Models.Actor>)ViewBag.Actors).Any())
+        @if (ViewBag.Actors != null && ((List<cinemaSite.Models.Actor>)ViewBag.Actors).Any())
         {
             <div class="actor-grid">
-                @foreach (var actor in (List<CinemaTask.Models.Actor>)ViewBag.Actors)
+                @foreach (var actor in (List<cinemaSite.Models.Actor>)ViewBag.Actors)
                 {
                     <div class="actor-card">
-                        <img src="~/images/cast/@(actor.Id).png"
+                        <img src="~/images/cast/@actor.ProfilePicture"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100/333/fff?text=@Uri.EscapeDataString(actor.FirstName + " " + actor.LastName)'"
                              class="actor-photo" alt="@actor.FirstName @actor.LastName">
                         <!-- rest of actor card -->
                     </div>
                 }
-                @* @foreach (var actor in (List<CinemaTask.Models.Actor>)ViewBag.Actors)
+                @* @foreach (var actor in (List<cinemaSite.Models.Actor>)ViewBag.Actors)
                 {
                     <div class="actor-card">
                         <img src="@(string.IsNullOrEmpty(actor.ProfilePicture) ? "https://via.placeholder.com/100x100/333/fff?text=" + Uri.EscapeDataString(actor.FullName) : actor.ProfilePicture)"

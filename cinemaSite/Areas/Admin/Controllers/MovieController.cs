@@ -1,52 +1,80 @@
-﻿using CinemaTask.DataAccess;
-using CinemaTask.Models;
-using CinemaTask.Utility;
+﻿using cinemaSite.DataAccess;
+using cinemaSite.Models;
+using cinemaSite.Repositories;
+using cinemaSite.Repositories.IRepositories;
+using cinemaSite.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
-namespace CinemaTask.Areas.Admin.Controllers
+namespace cinemaSite.Areas.Admin.Controllers
 {
     [Area(SD.AdminArea)]
 
     public class MovieController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        public MovieController(ApplicationDbContext context)
+        //private readonly ApplicationDbContext _movieRepository;
+        //public MovieController(ApplicationDbContext context)
+        //{
+        //    _movieRepository = context;
+        //}
+        private Repository<Category> _categoryRepository = new();
+        private Repository<Cinema> _cinemaRepository = new();
+        private Repository<Movie> _movieRepository = new();
+
+        private readonly IRepository<Movie> _moviesRepository;
+        private readonly IRepository<Cinema> _cinemasRepository;
+        private readonly IRepository<Category> _catRepository;
+
+        public MovieController(IRepository<Movie> movieRepository, IRepository<Category> catRepository, IRepository<Cinema> cinemasRepository)
         {
-            _context = context;
+            _moviesRepository = movieRepository;
+            _catRepository = catRepository;
+            _cinemasRepository = cinemasRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var movies = _context.Movies
-            .Include(m => m.Cinema)
-            .Include(m => m.Category)
-            .ToList();
+            var movies = await _movieRepository.GetAsync(includes: [e => e.Cinema, e => e.Category]);
+
             return View(movies);
         }
 
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Cinemas = new SelectList(_context.Cinemas, "Id", "Name");
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
 
-            return View();
+            var cinemas = await _cinemaRepository.GetAsync();
+            var categories = (await _categoryRepository.GetAsync()).Select(e => new SelectListItem()
+            {
+                Value = e.Id.ToString(),
+                Text = e.Name
+            });
+
+            return View(new cinemawithcategoryVM() { 
+                categories = categories.ToList(), 
+                cinemas = cinemas.ToList() }
+            );
+
+
+            
         }
 
 
         [HttpPost]
 
-        public IActionResult Create(Movie movie)
+        public async Task<IActionResult> Create(Movie movie)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(movie);
+            }
+            await _movieRepository.CreateAsync(movie);
+           await _movieRepository.CommitAsync();
 
-            _context.Movies.Add(movie);
-            _context.SaveChanges();
-
-            ViewBag.Cinemas = new SelectList(_context.Cinemas, "Id", "Name", movie.CinemaId);
-            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", movie.CategoryId);
-            return RedirectToAction("Index");
+            TempData["save"] = "Movie has been saved successfully";
+             return RedirectToAction("Index");
 
 
 
@@ -55,32 +83,51 @@ namespace CinemaTask.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var movie = _context.Movies.Find(id);
+            var movie = await _movieRepository.GetOneAsync(m => m.Id == id);
             if (movie == null) return NotFound();
 
-            return View(movie);
+            var cinemas = await _cinemaRepository.GetAsync();
+            var categories = (await _categoryRepository.GetAsync()).Select(e => new SelectListItem()
+            {
+                Value = e.Id.ToString(),
+                Text = e.Name
+            });
+
+            return View(new cinemawithcategoryVM()
+            {
+                categories = categories.ToList(),
+                cinemas = cinemas.ToList(),
+                movie = movie
+            }
+            );
+
         }
 
         [HttpPost]
-        public IActionResult Edit(Movie movie)
+        public async Task<IActionResult> Edit(Movie movie)
         {
-
-            _context.Movies.Update(movie);
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+            {
+                return View(movie);
+            }
+            _movieRepository.Update(movie);
+            await _movieRepository.CommitAsync();
+            TempData["edit"] = "Movie has been updated successfully";
             return RedirectToAction(nameof(Index));
         }
 
 
         [HttpPost]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = _context.Movies.Find(id);
+            var movie =await _movieRepository.GetOneAsync(m=>m.Id==id);
             if (movie == null) return NotFound();
 
-            _context.Movies.Remove(movie);
-            _context.SaveChanges();
+            _movieRepository.Delete(movie);
+            await _movieRepository.CommitAsync();
+            TempData["delete"] = "Movie has been deleted successfully";
             return RedirectToAction(nameof(Index));
         }
     }

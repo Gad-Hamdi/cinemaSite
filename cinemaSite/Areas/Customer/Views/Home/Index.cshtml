@@ -1,4 +1,4 @@
-﻿@model List<CinemaTask.Models.Movie>
+﻿@model List<cinemaSite.Models.Movie>
 @{
     ViewData["Title"] = "Movies - CineMax";
     Layout = "_Layout";
@@ -31,7 +31,7 @@
                 <div class="movie-card">
                     @* <img src="@(string.IsNullOrEmpty(movie.ImgUrl) ? "https://via.placeholder.com/300x400/333/fff?text=" + Uri.EscapeDataString(movie.Name) : movie.ImgUrl)"
                          class="movie-poster" alt="@movie.Name"> *@
-                    <img src="~/images/movies/@(movie.Id).png"
+                    <img src="~/images/movies/@(movie.ImgUrl)"
                          onerror="this.onerror=null;this.src='https://via.placeholder.com/300x400/333/fff?text=@Uri.EscapeDataString(movie.Name)'"
                          class="movie-poster" alt="@movie.Name">
                     <div class="movie-info">

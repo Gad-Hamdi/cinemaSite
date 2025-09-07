@@ -1,4 +1,4 @@
-﻿namespace CinemaTask.Utility
+﻿namespace cinemaSite.Utility
 {
     public class SD
     {

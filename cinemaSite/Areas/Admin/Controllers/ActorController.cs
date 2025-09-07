@@ -1,43 +1,55 @@
-﻿using CinemaTask.DataAccess;
-using CinemaTask.Models;
-using CinemaTask.Utility;
+﻿using cinemaSite.DataAccess;
+using cinemaSite.Models;
+using cinemaSite.Repositories.IRepositories;
+using cinemaSite.Utility;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-namespace CinemaTask.Areas.Admin.Controllers
+namespace cinemaSite.Areas.Admin.Controllers
 {
         [Area(SD.AdminArea)]
     public class ActorController : Controller
     {
-        private ApplicationDbContext _context;
+        //private ApplicationDbContext _context;
+        private readonly IRepository<Actor> _actorRepository;
+        private IRepository<Actor>? actorRepository;
 
-        public ActorController(ApplicationDbContext context)
+        //public ActorController(ApplicationDbContext context)
+        //{
+        //    _context = context;
+        //}
+        public ActorController(IRepository<Actor> actorRepository)
         {
-            _context = context;
+            _actorRepository = actorRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var actor = _context.Actors;
+            var actor =await _actorRepository.GetAsync();
             return View(actor.ToList());
         }
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create( )
         {
-            return View();
+            return View( new Actor());
         }
 
         [HttpPost]
-        public IActionResult Create(Actor actor)
+        public async Task<IActionResult> Create(Actor actor)
         {
-            _context.Actors.Add(actor);
-            _context.SaveChanges();
-
+            if (!ModelState.IsValid)
+            {
+                return View(actor);
+            }
+           await _actorRepository.CreateAsync(actor);
+            await _actorRepository.CommitAsync();
+            TempData["save"] = "Actor has been saved successfully";
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var actor = _context.Actors.FirstOrDefault(e => e.Id == id);
+            var actor =await _actorRepository.GetOneAsync(e => e.Id == id);
 
             if (actor is null)
                 return NotFound();
@@ -46,22 +58,28 @@ namespace CinemaTask.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Actor actor)
+        public async Task<IActionResult> Edit(Actor actor)
         {
-            _context.Actors.Update(actor);
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+            {
+                return View(actor);
+            }
+            _actorRepository.Update(actor);
+            await _actorRepository.CommitAsync();
+            TempData["edit"] = "Actor has been updated successfully";
 
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var actor = _context.Actors.FirstOrDefault(e => e.Id == id);
+            var actor = await _actorRepository.GetOneAsync(e => e.Id == id);
 
             if (actor is null)
                 return NotFound();
 
-            _context.Actors.Remove(actor);
-            _context.SaveChanges();
+            _actorRepository.Delete(actor);
+           await _actorRepository.CommitAsync();
+            TempData["delete"] = "Actor has been deleted successfully";
             return RedirectToAction(nameof(Index));
         }
     }

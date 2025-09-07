@@ -1,4 +1,4 @@
-﻿@model CinemaTask.Models.Actor
+﻿@model cinemaSite.Models.Actor
 @{
     ViewData["Title"] = Model.FullName + " - CineMax";
     Layout = "_Layout";
@@ -136,13 +136,13 @@
     <!-- Movies Section -->
     <div class="mt-5">
         <h3 class="mb-4"><i class="fas fa-film me-2"></i>Movies</h3>
-        @if (ViewBag.movies != null && ((List<CinemaTask.Models.Movie>)ViewBag.movies).Any())
+        @if (ViewBag.movies != null && ((List<cinemaSite.Models.Movie>)ViewBag.movies).Any())
         {
             <div class="movies-grid">
-                @foreach (var movie in (List<CinemaTask.Models.Movie>)ViewBag.movies)
+                @foreach (var movie in (List<cinemaSite.Models.Movie>)ViewBag.movies)
                 {
                     <div class="movie-card-small">
-                        <img src="~/images/cast/@(Model.Id).png"
+                        <img src="~/images/cast/@Model.ProfilePicture"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/200x200/333/fff?text=@Uri.EscapeDataString(Model.FirstName + " " + Model.LastName)'"
                              class="actor-image" alt="@Model.FirstName @Model.LastName">
 
@@ -152,7 +152,7 @@
                         <!-- rest of movie card -->
                     </div>
                 }
-                @* @foreach (var movie in (List<CinemaTask.Models.Movie>)ViewBag.movies)
+                @* @foreach (var movie in (List<cinemaSite.Models.Movie>)ViewBag.movies)
                 {
                     <div class="movie-card-small">
                         <img src="@(string.IsNullOrEmpty(movie.ImgUrl) ? "https://via.placeholder.com/250x150/333/fff?text=" + Uri.EscapeDataString(movie.Name) : movie.ImgUrl)"
