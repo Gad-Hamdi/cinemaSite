@@ -1,4 +1,5 @@
 ﻿using cinemaSite.DataAccess;
+using cinemaSite.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

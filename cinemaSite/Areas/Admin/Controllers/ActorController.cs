@@ -1,13 +1,14 @@
 ﻿using cinemaSite.DataAccess;
 using cinemaSite.Models;
 using cinemaSite.Repositories.IRepositories;
-using cinemaSite.Utility;
+using cinemaSite.Utitlity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace cinemaSite.Areas.Admin.Controllers
 {
         [Area(SD.AdminArea)]
+
     public class ActorController : Controller
     {
         //private ApplicationDbContext _context;

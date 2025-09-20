@@ -2,7 +2,7 @@
 {
     public class AddToCartVM
     {
-        public int ProductId { get; set; }
+        public int MovieId { get; set; }
         public int Count { get; set; }
     }
 }

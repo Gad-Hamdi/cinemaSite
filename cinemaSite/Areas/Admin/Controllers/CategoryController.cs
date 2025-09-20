@@ -1,7 +1,7 @@
 ﻿using cinemaSite.DataAccess;
 using cinemaSite.Models;
 using cinemaSite.Repositories.IRepositories;
-using cinemaSite.Utility;
+using cinemaSite.Utitlity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

@@ -1,6 +1,6 @@
 using cinemaSite.DataAccess;
 using cinemaSite.Models;
-using cinemaSite.Utility;
+using cinemaSite.Utitlity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;

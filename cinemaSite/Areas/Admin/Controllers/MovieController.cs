@@ -2,7 +2,7 @@
 using cinemaSite.Models;
 using cinemaSite.Repositories;
 using cinemaSite.Repositories.IRepositories;
-using cinemaSite.Utility;
+using cinemaSite.Utitlity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
